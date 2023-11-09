@@ -31,7 +31,7 @@ RSpec.describe Webflow::XscpBindings::Components::Form do
 
     include_examples "xscp node"
 
-    it "definition is a form wrapper" do
+    it "the form is wrapped in a FormWrapper div" do
       expect(subject.definition).to eq(Webflow::XscpBindings::Elements::FormWrapper.new.definition)
     end
   end

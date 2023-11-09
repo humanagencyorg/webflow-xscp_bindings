@@ -39,16 +39,15 @@ module Webflow
   module XscpBindings
     module Elements
       class Form < Node
-        ATTRIBUTES = [:redirect, :data_redirect, :action, :method, :data_attributes]
+        ATTRIBUTES = [:redirect, :data_redirect, :action, :method]
 
         attr_accessor *ATTRIBUTES
 
-        def initialize(_id: nil, child_nodes: [], classes: [], attributes: {})
-          super(_id: _id, child_nodes: child_nodes, classes: classes)
+        def initialize(_id: nil, child_nodes: [], classes: [], data_attributes: {}, attributes: {})
+          super(_id: _id, child_nodes: child_nodes, classes: classes, data_attributes: data_attributes)
           attributes.each do |name, value|
             public_send("#{name}=", value) if ATTRIBUTES.include?(name.to_sym)
           end
-          self.data_attributes ||= {}
         end
 
         def tag

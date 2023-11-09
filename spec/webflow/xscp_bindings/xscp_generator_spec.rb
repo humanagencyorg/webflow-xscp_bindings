@@ -1,4 +1,5 @@
 require "webflow/xscp_bindings/xscp_generator"
+require "webflow/xscp_bindings/elements/form_wrapper"
 
 RSpec.describe Webflow::XscpBindings::XscpGenerator do
 
@@ -13,39 +14,69 @@ RSpec.describe Webflow::XscpBindings::XscpGenerator do
       end
     end
 
-    context "when there is a form" do
-      subject { Webflow::XscpBindings::XscpGenerator.new("<form></form>").generate }
+    context "when there is a div inside of a div inside of a div" do
+      before(:each) { allow(SecureRandom).to receive(:uuid).and_return("div_wrapper_1", "div_wrapper_2", "div_wrapper_3") }
 
-      it "inserts a new node" do
-        expect(subject).to include(nodes: [
-          {
-            '_id': '8152039d-a800-b5cf-e367-f9a22ed8e94f',
-            'tag': 'div',
-            'classes': [],
-            'children': [
-              '8152039d-a800-b5cf-e367-f9a22ed8e950',
-              'a800-b5cf-e367-f9a22ed8e950',
-              'a900-b5cf-e367-f9a22ed8e950',
-              '8152039d-a800-b5cf-e367-f9a22ed8e96b',
-              '8152039d-a800-b5cf-e367-f9a22ed8e96e',
+      subject { Webflow::XscpBindings::XscpGenerator.new("<div><div><div></div></div></div>").generate }
+
+      it "inserts one node for each element" do
+        expect(subject[:nodes].size).to eq(3)
+      end
+
+      it "inserts the parent div node into the xscp document" do
+        expect(subject).to include(nodes: array_including(hash_including(
+            "_id": "div_wrapper_1",
+            "tag": "div",
+            "classes": [],
+            "children": [
+              "div_wrapper_2",
             ],
-            'type': 'FormWrapper',
-            'data': {
-              'form': {
-                'type': 'wrapper',
-              },
-              'attr': {
-                'id': '',
+            "data": {
+              "attr": {
+                "id": "",
               },
             },
-          }
-        ])
+        )))
+      end
+
+      it "inserts a child div node into the xscp document" do
+        expect(subject).to include(nodes: array_including(hash_including(
+            "_id": "div_wrapper_2",
+            "tag": "div",
+            "classes": [],
+            "children": [
+              "div_wrapper_3",
+            ],
+        )))
+      end
+
+      it "inserts a grandchild div node into the xscp document" do
+        expect(subject).to include(nodes: array_including(hash_including(
+            "_id": "div_wrapper_3",
+            "tag": "div",
+            "classes": [],
+            "children": [],
+        )))
       end
     end
 
-    context "when there is a div inside of a div" do
-      it "adds two nodes"
-      it "the second node is a child of the first node"
+    context "when there are sibling divs" do
+      before(:each) { allow(SecureRandom).to receive(:uuid).and_return("div_wrapper_1", "div_wrapper_2", "div_wrapper_3") }
+
+      subject { Webflow::XscpBindings::XscpGenerator.new("<div><div></div><div></div></div>").generate }
+
+      it "the parent div has two children" do
+        expect(subject).to include(nodes: array_including(hash_including(
+          children: [
+            "div_wrapper_2",
+            "div_wrapper_3",
+          ]
+        )))
+      end
+    end
+
+    context "when there is a form element" do
+
     end
   end
 end

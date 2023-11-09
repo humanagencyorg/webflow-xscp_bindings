@@ -1,3 +1,9 @@
+require "nokogiri"
+require "webflow/xscp_bindings/elements/paste_envelope"
+require "webflow/xscp_bindings/elements/form_wrapper"
+require "webflow/xscp_bindings/elements/form_success_wrapper"
+require "webflow/xscp_bindings/components/form"
+
 module Webflow
   module XscpBindings
     class XscpGenerator
@@ -6,34 +12,43 @@ module Webflow
       end
 
       def generate
-        hash = {
-          "type": "@webflow/XscpData",
-          "nodes": []
-        }
         if @html.include?("<form>")
-          hash[:nodes] = [{
-            '_id': '8152039d-a800-b5cf-e367-f9a22ed8e94f',
-            'tag': 'div',
-            'classes': [],
-            'children': [
-              '8152039d-a800-b5cf-e367-f9a22ed8e950',
-              'a800-b5cf-e367-f9a22ed8e950',
-              'a900-b5cf-e367-f9a22ed8e950',
-              '8152039d-a800-b5cf-e367-f9a22ed8e96b',
-              '8152039d-a800-b5cf-e367-f9a22ed8e96e',
-            ],
-            'type': 'FormWrapper',
-            'data': {
-              'form': {
-                'type': 'wrapper',
-              },
-              'attr': {
-                'id': '',
-              },
-            },
-          }]
+        elsif @html.include?("<div>")
+          html = Nokogiri::HTML.fragment(@html)
+
+          parent_node = traverse_divs(html, nil, 0)
+          {
+            "type": "@webflow/XscpData",
+            "nodes": [*parent_node.child_nodes.first.nodes]
+          }
+        else
+          Webflow::XscpBindings::Elements::PasteEnvelope.new.to_h
         end
-        hash
+      end
+
+      private
+
+      def traverse_divs(html, parent_node, item)
+        if parent_node.nil?
+
+          parent_node = Webflow::XscpBindings::Elements::PasteEnvelope.new
+          html.children.each do |child|
+            traverse_divs(child, parent_node, item + 1)
+          end
+        else
+          div2 = Webflow::XscpBindings::Elements::Div.new
+          parent_node.add_child(div2)
+
+          html.children.each do |child|
+            traverse_divs(child, div2, item + 1)
+          end
+        end
+
+        parent_node
+      end
+
+      def traverse(html, parent_node)
+        parent_node.nodes
       end
     end
   end

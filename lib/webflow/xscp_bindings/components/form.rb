@@ -7,9 +7,10 @@ module Webflow
     module Components
       class Form < Webflow::XscpBindings::Elements::Node
 
-        def initialize
-          super
+        def initialize(_id: nil, child_nodes: [])
+          super(_id: _id, child_nodes: child_nodes)
           @form_wrapper = Webflow::XscpBindings::Elements::FormWrapper.new
+          self.child_nodes << @form_wrapper
         end
 
         def data
@@ -21,11 +22,7 @@ module Webflow
         end
 
         def type
-          "FormWrapper"
-        end
-
-        def children
-          @form_wrapper.children
+          @form_wrapper.type
         end
       end
     end

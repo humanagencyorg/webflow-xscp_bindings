@@ -1,16 +1,25 @@
 require "webflow/xscp_bindings/elements/div"
+require "webflow/xscp_bindings/elements/form_success_wrapper"
 
 module Webflow
   module XscpBindings
     module Elements
       class FormWrapper < Div
-        def initialize(_id: nil, child_nodes: [], classes: [])
-          super(_id: _id, child_nodes: child_nodes, classes: classes)
+        def initialize(_id: nil, classes: [])
+          super(_id: _id, classes: classes)
           @type = "FormWrapper"
+          self.child_nodes << Webflow::XscpBindings::Elements::FormSuccessWrapper.new
         end
 
-        def children
-          []
+        def data
+          {
+            attr: {
+              id: ""
+            },
+            form: {
+              type: "wrapper"
+            }
+          }
         end
       end
     end

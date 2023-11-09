@@ -45,8 +45,12 @@ RSpec.shared_examples "xscp node" do |node|
 
     it "contains a data" do
       expect(subject.definition[:data]).not_to be_nil
-      expect(subject.definition[:data]).to include(subject.data)
       expect(subject.definition[:data]).to be_a Hash
+    end
+
+    it "contains data attributes "do
+      expect(subject.definition[:data]).to include(attr: hash_including(subject.data[:attr]))
+      expect(subject.definition[:data]).to include(attr: hash_including(subject.data_attributes))
     end
   end
 end

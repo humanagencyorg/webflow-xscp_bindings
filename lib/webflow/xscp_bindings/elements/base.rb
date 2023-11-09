@@ -7,7 +7,7 @@ module Webflow
         attr_accessor :_id
 
         def initialize(_id: nil)
-          self._id ||= SecureRandom.uuid
+          self._id = _id || SecureRandom.uuid
         end
       end
     end

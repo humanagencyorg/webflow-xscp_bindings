@@ -29,16 +29,15 @@ module Webflow
   module XscpBindings
     module Elements
       class TextInput < Node
-        attr_accessor :id, :name, :placeholder, :data_attributes, :disabled, :required
+        attr_accessor :id, :name, :placeholder, :disabled, :required
 
-        def initialize(id:, name:, placeholder:, data_attributes: [], disabled: false, required: false, _id: nil, child_nodes: [])
-          super(_id: id, child_nodes: child_nodes)
+        def initialize(id:, name:, placeholder:,disabled: false, required: false, _id: nil, child_nodes: [], data_attributes: {})
+          super(_id: _id, child_nodes: child_nodes, data_attributes: data_attributes)
           self.id = id
           self.name = name
           self.placeholder = placeholder
           self.disabled = disabled
           self.required = required
-          self.data_attributes = data_attributes
         end
 
         def tag
@@ -61,7 +60,7 @@ module Webflow
               type: "text",
               disabled: disabled,
               required: required,
-              **data_attributes,
+              placeholder: placeholder,
           }}
         end
       end

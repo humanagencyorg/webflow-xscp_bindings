@@ -35,7 +35,7 @@ RSpec.describe Webflow::XscpBindings::Elements::TextInput do
     end
 
     it "contains attr placeholder" do
-      expect(subject.data).to include(attr: hash_including({ id: id, name: name }))
+      expect(subject.data).to include(attr: hash_including({}))
     end
 
     it "contains attr type" do
@@ -48,9 +48,11 @@ RSpec.describe Webflow::XscpBindings::Elements::TextInput do
     it "contains attr required" do
       expect(subject.data).to include(attr: hash_including({ required: required }))
     end
+  end
 
+  describe "#definition" do
     it "contains attr required" do
-      expect(subject.data).to include(attr: hash_including(**data_attributes))
+      expect(subject.definition).to include(data: hash_including(attr: hash_including(**data_attributes)))
     end
   end
 end

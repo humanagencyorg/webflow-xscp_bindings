@@ -15,5 +15,4 @@ RSpec.describe Webflow::XscpBindings::Elements::Div do
       expect(subject.data).to include(attr: { id: '' })
     end
   end
-
 end

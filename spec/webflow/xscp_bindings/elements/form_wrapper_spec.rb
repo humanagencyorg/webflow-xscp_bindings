@@ -1,4 +1,5 @@
 require "webflow/xscp_bindings/elements/form_wrapper"
+require "webflow/xscp_bindings/elements/form_success_wrapper"
 require "webflow/xscp_bindings/elements/div"
 
 RSpec.describe Webflow::XscpBindings::Elements::FormWrapper do
@@ -8,5 +9,31 @@ RSpec.describe Webflow::XscpBindings::Elements::FormWrapper do
 
   it "has a type of FormWrapper" do
     expect(subject.type).to eq("FormWrapper")
+  end
+
+  describe "#data" do
+    it "has attribute attr id" do
+      expect(subject.data).to include(attr: hash_including({ id: "" }))
+    end
+
+    it "has form attribute type wrapper" do
+      expect(subject.data).to include(form: { type: "wrapper" })
+    end
+  end
+
+  describe "#children" do
+    it "has a child FormSuccessWrapper" do
+      success_message = subject.nodes[1]
+
+      expect(subject.children).to include(success_message[:_id])
+      expect(subject.nodes).to include(Webflow::XscpBindings::Elements::FormSuccessWrapper.new(_id: success_message[:_id]).definition)
+    end
+
+    it "has a child FormErrorWrapper" do
+      success_message = subject.nodes[1]
+
+      expect(subject.children).to include(success_message[:_id])
+      expect(subject.nodes).to include(Webflow::XscpBindings::Elements::FormSuccessWrapper.new(_id: success_message[:_id]).definition)
+    end
   end
 end

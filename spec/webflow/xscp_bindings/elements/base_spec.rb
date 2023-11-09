@@ -15,7 +15,8 @@ RSpec.describe Webflow::XscpBindings::Elements::Base do
     end
 
     it "can be passed via the constructor" do
-      expect(ExampleBaseNode.new(_id: test_uuid)._id).to eq(test_uuid)
+      diff_uuid = "abc123"
+      expect(ExampleBaseNode.new(_id: diff_uuid)._id).to eq(diff_uuid)
     end
   end
 end
