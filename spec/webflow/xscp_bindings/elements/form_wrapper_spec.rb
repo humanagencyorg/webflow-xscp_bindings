@@ -20,20 +20,4 @@ RSpec.describe Webflow::XscpBindings::Elements::FormWrapper do
       expect(subject.data).to include(form: { type: "wrapper" })
     end
   end
-
-  describe "#children" do
-    it "has a child FormSuccessWrapper" do
-      success_message = subject.nodes[1]
-
-      expect(subject.children).to include(success_message[:_id])
-      expect(subject.nodes).to include(Webflow::XscpBindings::Elements::FormSuccessWrapper.new(_id: success_message[:_id]).definition)
-    end
-
-    it "has a child FormErrorWrapper" do
-      success_message = subject.nodes[1]
-
-      expect(subject.children).to include(success_message[:_id])
-      expect(subject.nodes).to include(Webflow::XscpBindings::Elements::FormSuccessWrapper.new(_id: success_message[:_id]).definition)
-    end
-  end
 end

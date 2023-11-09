@@ -8,7 +8,6 @@ module Webflow
         def initialize(_id: nil, classes: [])
           super(_id: _id, classes: classes)
           @type = "FormWrapper"
-          self.child_nodes << Webflow::XscpBindings::Elements::FormSuccessWrapper.new
         end
 
         def data
